@@ -10,7 +10,7 @@ const getUserByUsername = username => {
 };
 
 const addUser = (user) => {
-  const values = [user.name, user.password, ''];
+  const values = [user.username, user.password];
   return pool
     .query(`INSERT INTO auth (username, password) VALUES ($1, $2) RETURNING *;`, values)
     .then((result) => {
