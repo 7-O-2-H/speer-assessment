@@ -8,7 +8,10 @@ const { pool } = require('../db/queries/pool');
 
 /* GET auth listing. */
 router.get('/', function(req, res) {
-  res.send(auth);
+  authQueries.getAllUsers()
+  .then(data => {
+    res.json(data);
+  })
 });
 
 module.exports = router;
@@ -16,7 +19,7 @@ module.exports = router;
 
 router.post('/login', function(req, res) {
   
-  const username = req.body.user;
+  const username = req.body.username;
   const password = req.body.password;
   
   //check if user exists

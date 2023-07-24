@@ -1,9 +1,15 @@
 const { pool } = require('../queries/pool');
-const db = require('../../configs/db.config');\
+const db = require('../../configs/db.config');
 
 const getUserByUsername = username => {
-  const username = username;
   return db.query(`SELECT * FROM auth WHERE auth.username = $1`, [username])
+  .then(data => {
+    return data.rows;
+  });
+};
+
+const getAllUsers = () => {
+  return db.query(`SELECT * FROM users`)
   .then(data => {
     return data.rows;
   });
@@ -22,4 +28,4 @@ const addUser = (user) => {
     });
 };
 
-module.exports = { getUserByUsername, addUser }
+module.exports = { getUserByUsername, addUser, getAllUsers }
