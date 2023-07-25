@@ -6,7 +6,7 @@ const notesQueries = require('../db/queries/notes');
 
 router.get('/notes', function(req, res) {
 
-  notesQueries.getAllnotes()
+  notesQueries.getAllNotes()
   .then(data => {
     return res.json(data);
   });
@@ -21,13 +21,23 @@ router.put('/notes', function(req, res) {
   .then(data => {
     return res.json(data);
   });
+
 });
 
-router.put('/project', function(req,res) {
+router.get('/notes/:id', function(req, res) {
 
-  const project_id = req.body.project_id;
+  const id = req.params.id;
 
-  notesQueries.getnotesById(project_id)
+  notesQueries.getNotesById(id)
+  .then(data => {
+    return res.json(data);
+  });
+  
+});
+
+router.put('/notes/:id', function(req,res) {
+
+  notesQueries.addNote(note)
   .then((data) => {
     return res.json(data);
   });

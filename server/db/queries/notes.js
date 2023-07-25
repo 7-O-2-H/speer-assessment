@@ -19,18 +19,18 @@ const getNotesById = (id) => {
   })
 }
 
-// const addProject = (userID, project) => {
-//   const values = [project.title, project.description, project.features, project.tech_stack, project.image_url, project.project_url, userID];
-//   return pool
-//     .query(`INSERT INTO projects (title, description, features, tech_stack, image_url, project_url, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;`, values)
-//     .then((result) => {
-//       return result.rows;
-//     })
-//     .catch((err) => {
-//       console.log('add project error;', err.message);
-//       return null;
-//     });
-// };
+const addNote = (userId, note) => {
+  const values = [note.title, note.body, userId];
+  return pool
+    .query(`INSERT INTO notes (title, body, userId) VALUES ($1, $2, $3) RETURNING *;`, values)
+    .then((result) => {
+      return result.rows;
+    })
+    .catch((err) => {
+      console.log('add note error:', err.message);
+      return null;
+    });
+};
 
 // const editProject = (project) => {
 
@@ -53,4 +53,4 @@ const getNotesById = (id) => {
 //   })
 // };
 
-module.exports = { getNotesById, getAllNotes, getAllNotes };
+module.exports = { getAllNotes, getNotesById, getAllNotes, addNote };
