@@ -29,6 +29,11 @@ router.put('/notes', function(req, res) {
     body: req.params.body
   };
 
+  if (!templateVars.user_id) {
+    res.send("You must be logged in to view notes");
+    return;
+  };
+
   notesQueries.addNote(user_id, note)
   .then(data => {
     return res.json(data);
@@ -71,13 +76,14 @@ router.put('/notes/:id', function(req,res) {
   };
 
   const noteUser = getUserIdByNoteId(id);
+
   if (!templateVars.id) {
-    res.send("You must be logged in to create Tiny URLs");
+    res.send("You must be logged in to edit notes");
     return;
   };
 
-  if (templateVars.user_id.id !== urlDatabase[key].userID) {
-    return res.send("You do not have access to this URL!");
+  if (templateVars.user_id !== noteUser) {
+    return res.send("You do not have access to this note!");
   };
 
   notesQueries.editNote(note)
@@ -87,40 +93,29 @@ router.put('/notes/:id', function(req,res) {
 
 });
 
-router.post('/notes/new', function(req, res) {
+router.delete('/notes/delete/:id', function (req, res) {
 
-  const project = req.body.project_info;
-  const userId = req.body.user_id;
+  const id = req.body.id;
 
-  notesQueries.addProject(userId, project)
+  const templateVars = {
+    user_id: req.session.user_id,
+  };
+
+  const noteUser = getUserIdByNoteId(id);
+
+  if (!templateVars.user_id) {
+    res.send("You do not have access to this note!");
+    return;
+  };
+
+  if (templateVars.user_id !== noteUser) {
+    return res.send("You do not have access to this note!");
+  };
+
+  notesQueries.deletePosts(id)
   .then((data) => {
-    return res.json(data);
-  });
-
-});
-
-router.put('/notes/edit', function(req, res) {
-
-  const project = req.body.editedProject;
-
-  notesQueries.editProject(project)
-  .then((data) => {
-    return res.json(data);
-  });
-
-});
-
-router.post('/project/delete', function (req, res) {
-
-  const id = req.body.project;
-
-  notesQueries.deleteProject(id)
-  .then((data) => {
-    return res.json(data);
+    return res.send("This note has been deleted");
   });
 });
-
-module.exports = router;
-
 
 module.exports = router;

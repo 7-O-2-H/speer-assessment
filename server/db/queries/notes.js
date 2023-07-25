@@ -1,11 +1,13 @@
 const db = require('../../configs/db.config');
 const { pool } = require('../queries/pool');
 
-const getAllNotes = () => {
-	return db.query("SELECT * FROM notes;").then(data => {
-		return data.rows;
-	})
-}
+/* notes test code below */
+
+// const getAllNotes = () => {
+// 	return db.query("SELECT * FROM notes;").then(data => {
+// 		return data.rows;
+// 	})
+// }
 
 const getNotesByUserId = (id) => {
   return db.query("SELECT * FROM notes WHERE notes.user_id = $1", [id]).then(data => {
@@ -32,11 +34,17 @@ const addNote = (userId, note) => {
     });
 };
 
-const getUserIdByNoteId = (noteId)
+const getUserIdByNoteId = (id) => {
+
+  return db.query("SELECT notes.user_id FROM notes WHERE id = $1", [id])
+  .then(data => {
+    return data.rows;
+  })
+};
 
 const editNote = (note) => {
 
-  const values = [note.title, ];
+  const values = [note.title, note.body];
   
   return pool
     .query(`UPDATE notes SET title = $1, body = $2 RETURNING *;`, values)
@@ -49,10 +57,10 @@ const editNote = (note) => {
     });
 };
 
-// const deleteProject = (id) => {
-//   return db.query(`DELETE FROM projects WHERE projects.id = $1`, [id]). then((data) => {
-//     return data.rows
-//   })
-// };
+const deletePosts = (id) => {
+  return db.query(`DELETE FROM posts WHERE notes.id = $1`, [id]). then((data) => {
+    return data.rows
+  })
+};
 
-module.exports = { getAllNotes, getNotesById, getAllNotes, addNote, getNotesByUserId, editNote };
+module.exports = { getNotesById, addNote, getNotesByUserId, editNote, getUserIdByNoteId, deletePosts };
