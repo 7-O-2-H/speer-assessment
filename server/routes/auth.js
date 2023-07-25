@@ -3,21 +3,19 @@ const router = express.Router();
 const authQueries = require('../db/queries/auth');
 const { pool } = require('../db/queries/pool');
 
-//test user
-// const auth = ["josh"];
-
-/* GET auth listing. */
-router.get('/', function(req, res) {
+/* GET auth  */
+router.get('/auth', function(req, res) {
   authQueries.getAllUsers()
   .then(data => {
     res.json(data);
   })
 });
 
-module.exports = router;
+router.get('/auth/login', function(req, res) {
+  res.send('hello');
+});
 
-
-router.post('/login', function(req, res) {
+router.post('/auth/login', function(req, res) {
   
   const username = req.body.username;
   const password = req.body.password;
@@ -44,7 +42,11 @@ router.post('/login', function(req, res) {
  
 });
 
-router.post('/signup', function(req, res) {
+router.get('/auth/signup', function(req, res) {
+  console.log('hello');
+})
+
+router.post('/auth/signup', function(req, res) {
 
   newUser = {
     name: req.body.name,
