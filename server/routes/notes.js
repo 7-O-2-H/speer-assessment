@@ -8,8 +8,8 @@ router.get('/notes', function(req, res) {
     user_id: req.session.user_id,
   };
 
-  if (!userLoggedin(templateVars)) {
-    res.send("you must be loggin in to view URLs");
+  if (!templateVars.user_id) {
+    res.send("you must be logged in to view URLs");
     return;
   };
 

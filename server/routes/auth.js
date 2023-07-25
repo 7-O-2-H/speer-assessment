@@ -1,7 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const authQueries = require('../db/queries/auth');
-const { pool } = require('../db/queries/pool');
+const cookieSession = require("cookie-session");
+app.use(cookieSession({
+  name: 'session',
+  keys: ["key1", "key2"],
+
+  maxAge: 24 * 60 * 60 * 1000
+}));
+
+//bcrypt
+
+const bcrypt = require("bcryptjs");
 
 /* GET auth  */
 router.get('/auth', function(req, res) {
@@ -12,17 +22,13 @@ router.get('/auth', function(req, res) {
 });
 
 router.get('/auth/login', function(req, res) {
-  res.send('hello');
 });
 
 router.post('/auth/login', function(req, res) {
   
-  const username = req.body.username;
-  const password = req.body.password;
+  const {user, password} = req.body;
   
-  //check if user exists
-
-  req.session.user_id = null;
+  const hashedPassword = bcrypt.hashSync(password, 10);
   
   authQueries.getUserByuser(user)
   .then(data => {
