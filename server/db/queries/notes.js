@@ -32,20 +32,22 @@ const addNote = (userId, note) => {
     });
 };
 
-// const editProject = (project) => {
+const getUserIdByNoteId = (noteId)
 
-//   const values = [project.description, project.features, project.tech_stack, project.image_url, project.project_url, project.id];
+const editNote = (note) => {
+
+  const values = [note.title, ];
   
-//   return pool
-//     .query(`UPDATE projects SET description = $1, features = $2, tech_stack = $3, image_url = $4, project_url =$5 WHERE id = $6 RETURNING *;`, values)
-//     .then((result) => {
-//       return result.rows;
-//     })
-//     .catch((err) => {
-//       console.log('add project error;', err.message);
-//       return err;
-//     });
-// };
+  return pool
+    .query(`UPDATE notes SET title = $1, body = $2 RETURNING *;`, values)
+    .then((result) => {
+      return result.rows;
+    })
+    .catch((err) => {
+      console.log('add note error;', err.message);
+      return err;
+    });
+};
 
 // const deleteProject = (id) => {
 //   return db.query(`DELETE FROM projects WHERE projects.id = $1`, [id]). then((data) => {
@@ -53,4 +55,4 @@ const addNote = (userId, note) => {
 //   })
 // };
 
-module.exports = { getAllNotes, getNotesById, getAllNotes, addNote };
+module.exports = { getAllNotes, getNotesById, getAllNotes, addNote, getNotesByUserId, editNote };
