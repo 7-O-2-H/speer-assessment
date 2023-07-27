@@ -11,9 +11,10 @@ const bcrypt = require("bcrypt");
 
 router.get('/auth/login', function(req, res) {
   const user_id = req.session.user_id;
-  if (user_ud) {
+  if (user_id) {
     res.send("You are already logged in.")
   }
+  res.render("auth_login", user_id);
 });
 
 router.post('/auth/login', function(req, res) {
@@ -22,10 +23,10 @@ router.post('/auth/login', function(req, res) {
   
   const hashedPassword = bcrypt.hashSync(password, 10);
   
-  authQueries.getUserByuser(user)
+  authQueries.getUserByUsername(user)
   .then(data => {
     if (!data[0]) {
-      return res.send([false, `Error: user not in database: ${user}`]);
+      return res.send(`Error: user not in database: ${user}`);
     }
 
     if (hashedPassword != data[0].password) {
@@ -33,6 +34,7 @@ router.post('/auth/login', function(req, res) {
     }
 
     //set user
+    
     req.session.user_id = data[0].id;
     return res.json([true, req.session.user_id]);
   });
@@ -40,31 +42,36 @@ router.post('/auth/login', function(req, res) {
 });
 
 router.get('/auth/signup', function(req, res) {
-  
-})
+  const user_id = req.session.user_id;
+  if (user_id) {
+    res.send("You are already logged in.")
+  }
+  res.render("auth_signup", user_id);
+});
 
 router.post('/auth/signup', function(req, res) {
+
+  const password = req.body.password;
 
   const hashedPassword = bcrypt.hashSync(password, 10);
 
   newUser = {
-    name: req.body.name,
     user: req.body.user,
     password: hashedPassword
   }
-
   
   //Check if user already exists
-  authQueries.getUserByuser(newUser.user).then(data => {
-    if (data[0]) {
-      return res.send([false, 'Error: this e-mail already in our database.']);
-    };
-  });
+  // authQueries.getUserByUsername(newUser['user']).then(data => {
+  //   if (data[0]) {
+  //     return res.send([false, 'Error: this user is already in our database.']);
+  //   };
+  // });
 
   //Add new user
   authQueries.addUser(newUser).then(data => {
-    req.session.user_id = data[0].id;
-    return res.send([true, req.session.user_id]);
+    // return res.send([true, req.session.user_id]);
+    console.log(data);
+    return res.send(data);
   })
 
 });

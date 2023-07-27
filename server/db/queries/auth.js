@@ -2,7 +2,7 @@ const { pool } = require('../queries/pool');
 const db = require('../../configs/db.config');
 
 const getUserByUsername = username => {
-  return db.query(`SELECT * FROM auth WHERE auth.username = $1`, [username])
+  return db.query(`SELECT * FROM users WHERE users.username = $1`, [username])
   .then(data => {
     return data.rows;
   });
@@ -16,16 +16,16 @@ const getAllUsers = () => {
 };
 
 const addUser = (user) => {
-  const values = [user.username, user.password];
+  const values = [user.user, user.password];
+
   return pool
-    .query(`INSERT INTO auth (username, password) VALUES ($1, $2) RETURNING *;`, values)
+    .query(`INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *;`, values)
     .then((result) => {
       return result.rows;
     })
-    .catch((err) => {
-      console.log('add user error;', err.message);
-      return null;
-    });
+    // .catch((err) => {
+    //   return (['add user error:', err.message, values]);
+    // });
 };
 
 module.exports = { getUserByUsername, addUser, getAllUsers }

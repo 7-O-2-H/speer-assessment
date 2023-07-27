@@ -9,7 +9,7 @@ router.get('/notes', function(req, res) {
   };
 
   if (!templateVars.user_id) {
-    res.send("you must be logged in to view URLs");
+    res.send("you must be logged in to view notes");
     return;
   };
 
