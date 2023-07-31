@@ -4,18 +4,25 @@ const notesQueries = require('../db/queries/notes');
 
 router.get('/notes', function(req, res) {
 
-  const templateVars = {
-    user_id: req.session.user_id,
-  };
+  // const templateVars = {
+  //   user_id: req.session.user_id,
+  // };
 
-  if (!templateVars.user_id) {
+  const user_id = req.session.user_id;
+
+  if (!user_id) {
     res.send("you must be logged in to view notes");
     return;
   };
 
-  notesQueries.getnotesByUserId(user_id)
+  notesQueries.getNotesByUserId(user_id)
   .then(data => {
-    return res.json(data);
+    //return res.json(data);
+    const templateVars = {
+      user_id: user_id,
+
+    }
+    res.render("notes_display", )
   });
   
 });
@@ -49,14 +56,14 @@ router.get('/notes/:id', function(req, res) {
     user_id: req.session.user_id,
   };
 
-  const noteUserId = getUserIdByNoteId(id);
+  const noteUserId = notesQueries.getUserIdByNoteId(id);
 
   if (!templateVars.user_id) {
     res.send("You must be logged in to view notes");
     return;
   };
 
-  if (templateVars.user_id !== noteUser) {
+  if (templateVars.user_id !== noteUserId) {
     return res.send("You do not have access to this note!");
   };
 

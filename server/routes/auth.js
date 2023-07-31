@@ -29,14 +29,14 @@ router.post('/auth/login', function(req, res) {
       return res.send(`Error: user not in database: ${user}`);
     }
 
-    if (hashedPassword != data[0].password) {
-      return res.send([false, 'Error: Your password is incorrect!']);
+    if (password != data[0].password) {
+      return res.send([false, 'Error: Your password is incorrect!', data]);
     }
 
     //set user
     
     req.session.user_id = data[0].id;
-    return res.json([true, req.session.user_id]);
+    res.redirect('/notes');
   });
  
 });
@@ -61,16 +61,14 @@ router.post('/auth/signup', function(req, res) {
   }
   
   //Check if user already exists
-  // authQueries.getUserByUsername(newUser['user']).then(data => {
-  //   if (data[0]) {
-  //     return res.send([false, 'Error: this user is already in our database.']);
-  //   };
-  // });
+  authQueries.getUserByUsername(newUser['user']).then(data => {
+    if (data[0]) {
+      return res.send([false, 'Error: this user is already in our database.']);
+    };
+  });
 
   //Add new user
   authQueries.addUser(newUser).then(data => {
-    // return res.send([true, req.session.user_id]);
-    console.log(data);
     return res.send(data);
   })
 
